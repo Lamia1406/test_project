@@ -1,0 +1,4 @@
+# These individuals contributed to the Virtual Speech Assistant project in this repository 
+
+Chaima Boumansoura <boumansourachaima@gmail.com>
+Lamia Hamdi <lamia.hamdi1406@gmail.com>
