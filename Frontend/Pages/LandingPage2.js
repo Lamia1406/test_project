@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Button from './Partials/Button';
-const arrowRight = require("../assets/images/icons/arrow_right.png")
 const disussionImg = require("../assets/images/discussion_img.png")
 const swipeRight = require("../assets/images/icons/swipe_right.png")
 const LandingPage2 = () => {

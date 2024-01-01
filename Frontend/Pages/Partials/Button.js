@@ -6,15 +6,15 @@ const Button = ({title, color, background, font_size, icon}) => {
             paddingVertical: 12,
             paddingHorizontal: 20,
             borderRadius: 50,
-            flexDirection: "row",
+            flexDirection: icon ? "row" : "column",
             alignItems: "center",
             flex: 1,
-            gap: 20
-            
+            gap: 20      
         },
         btn_txt : {
             color: color,
             fontSize: font_size,
+            
         },
         img : {
             height: 24 ,
