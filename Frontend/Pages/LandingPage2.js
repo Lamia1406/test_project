@@ -7,14 +7,14 @@ const LandingPage2 = () => {
         <View style={[styles.main]}>
             <View style={styles.hero_img}>
                 <Image source={swipeRight} style={{ height: 5, width: 40 }} resizeMode="contain" />
-                <Image source={disussionImg} style={{ height: 288.184, width: 338.529,transform: [{rotate: "-12.5deg"}]}} resizeMode="contain" />
+                <Image source={disussionImg} style={{ height: 288.184, width: 338.529, transform: [{ rotate: "-12.5deg" }] }} resizeMode="contain" />
             </View>
             <View style={styles.hero_container}>
-                <Text style={[styles.hero_heading]}>Let's start !</Text>   
+                <Text style={[styles.hero_heading]}>Let's start !</Text>
             </View>
             <View style={styles.btn_container}>
                 <Button title="I'm new here" color="#0ABAB5" background="white" font_size={20} />
-                <Button title="Sign In" color="#008080" background="transparent" font_size={20}/>
+                <Button title="Sign In" color="#008080" background="transparent" font_size={20} />
             </View>
 
         </View>

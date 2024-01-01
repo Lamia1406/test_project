@@ -16,7 +16,7 @@ const LandingPage1 = () => {
                     i am here to make your day brighter and your tasks a little bit easier !</Text>
             </View>
             <View style={styles.btn_container}>
-                <Button title="Next" color="#0ABAB5" background="white" font_size={16} icon = {arrowRight}/>
+                <Button title="Next" color="#0ABAB5" background="white" font_size={16} icon={arrowRight} height={24} width={24} icon_dir="right" />
             </View>
 
         </View>
