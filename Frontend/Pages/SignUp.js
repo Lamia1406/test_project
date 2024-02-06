@@ -1,57 +1,82 @@
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Button from './Partials/Button';
-const Facebook = require("../assets/images/icons/facebook.png")
-const Google = require("../assets/images/icons/google.png")
 import { useState } from 'react';
-const SignUp = ({navigation}) => {
+const SignUp = ({ navigation }) => {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState({})
+    const [user, setUser] = useState([])
+    const fetchData = async () => {
+        // use JSON Placeholder for testing purposes
+        const response = await fetch(
+            `http://jsonplaceholder.typicode.com/users?username=${username}`
+        )
+        const data = await response.json()
+        setUser(data)
+    }
     const validateForm = () => {
         let errors = {}
+        fetchData()
         if (!username) errors.username = "Username is required"
-        if (!email) errors.password = "Email is required"
+        else if (user.length != 0) errors.username = "Username already exists"
+        else if (username.length < 3 || username.length > 20) errors.username = "Username must be between 3 and 20 characters"
+        else if (!/^[a-zA-Z0-9]+$/.test(username)) errors.username = "Username can only contain letters and numbers"
+        else if (!/^[a-zA-Z]*$/.test(username)) errors.username = "Username should start with a letter"
+
+        if (!email) errors.email = "Email is required"
+        else if (!/^[^\s@]+@univ-constantine2\.dz$/.test(email)) errors.email = "Only university emails are allowed"
         if (!password) errors.password = "Password is required"
+        else if (password.length < 8) errors.password = "Password must be at least 8 characters"
+        else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/.test(password)) errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
         setErrors(errors)
         return Object.keys(errors).length === 0
     }
     const handleSubmit = () => {
-
+        if (validateForm()) {
+            setUsername("")
+            setEmail("")
+            setPassword("")
+            setErrors("")
+            navigation.navigate("Home")
+        }
     }
     return (
-        <View style={styles.main}>
-            <View style={styles.welcome_container}>
-                <Text style={styles.welcome_heading}>Sign Up</Text>
-                <View>
-                    <Text style={styles.welcome_txt}>One step further to access exclusive features </Text>
-                    <Text style={styles.welcome_txt}>and personalized experiences !</Text>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.main}>
+                <View style={styles.welcome_container}>
+                    <Text style={styles.welcome_heading}>Sign Up</Text>
+                    <View>
+                        <Text style={styles.welcome_txt}>One step further to access exclusive features </Text>
+                        <Text style={styles.welcome_txt}>and personalized experiences !</Text>
+                    </View>
                 </View>
-            </View>
-            <KeyboardAvoidingView behavior='padding' style={styles.signin_form}>
-                <TextInput placeholder='Username' style={styles.input_field} value={username} onChangeText={(text) => setUsername(text)} />
-                {
-                    errors.username ? <Text>{errors.username}</Text> : null
-                }
-                <TextInput placeholder='Email' style={styles.input_field} value={email} onChangeText={(text) => setEmail(text)} />
-                {
-                    errors.email ? <Text>{errors.email}</Text> : null
-                }
-                <TextInput placeholder='Password' secureTextEntry style={styles.input_field} value={password} onChangeText={(text) => setPassword(text)} />
-                {
-                    errors.password ? <Text>{errors.passowrd}</Text> : null
-                }
-                <View style={styles.btn_container}>
-                    <Button title="Sign up" color="white" background="#008080" font_size={20} onPress={()=>navigation.navigate("Home")}/>
-                </View>
-            </KeyboardAvoidingView>
-            <View style={styles.signin_alt}>
-                <Text style={{ color: "#5B7E7E", fontSize: 14 }}>
-                    already have an account ? <Pressable style={{ color: "#D2ACA0" }} onPress={()=>navigation.navigate("Login")}><Text>sign in</Text></Pressable>
-                </Text>
-            </View>
+                <KeyboardAvoidingView behavior='padding' style={styles.signin_form}>
+                    <TextInput placeholder='Username' style={styles.input_field} value={username} onChangeText={(text) => setUsername(text)} />
+                    {
+                        errors.username ? <Text style={styles.error}>{errors.username}</Text> : null
+                    }
+                    <TextInput placeholder='Email' style={styles.input_field} value={email} onChangeText={(text) => setEmail(text)} />
+                    {
+                        errors.email ? <Text style={styles.error}>{errors.email}</Text> : null
+                    }
 
-        </View>
+                    <TextInput placeholder='Password' secureTextEntry style={styles.input_field} value={password} onChangeText={(text) => setPassword(text)} />
+                    {
+                        errors.password ? <Text style={styles.error}>{errors.password}</Text> : null
+                    }
+                    <View style={styles.btn_container}>
+                        <Button title="Sign up" color="white" background="#008080" font_size={20} onPress={handleSubmit} />
+                    </View>
+                </KeyboardAvoidingView>
+                <View style={styles.signin_alt}>
+                    <Text style={{ color: "#5B7E7E", fontSize: 14 }}>
+                        already have an account ? <Pressable style={{ color: "#D2ACA0" }} onPress={() => navigation.navigate("Login")}><Text>sign in</Text></Pressable>
+                    </Text>
+                </View>
+
+            </View>
+        </SafeAreaView>
     );
 };
 
@@ -60,12 +85,14 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 16,
         justifyContent: 'center',
-        backgroundColor: "#B3EBE9"
+        backgroundColor: "#B3EBE9",
+        paddingVertical: 32,
+        gap: 32
     },
     welcome_container: {
-        paddingVertical: 36,
         gap: 16,
-        alignItems: 'center'
+        alignItems: 'center',
+
     },
     welcome_heading: {
         color: "#008080",
@@ -77,9 +104,7 @@ const styles = StyleSheet.create({
         fontSize: 14
     },
     signin_form: {
-        paddingVertical: 36,
         gap: 16,
-
     },
     input_field: {
         paddingVertical: 12,
@@ -91,31 +116,17 @@ const styles = StyleSheet.create({
 
     },
     btn_container: {
-        marginHorizontal: 112
+        marginHorizontal: "auto",
+        maxWidth: 240
     },
-    login_methods: {
-        paddingVertical: 36,
-        gap: 16
-    },
-    alt_btns: {
-        paddingHorizontal: 64,
-        gap: 16
-    },
-    legend: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: "100%",
-        justifyContent: "center",
-        columnGap: 12
-    },
-    line: {
-        height: 1,
-        width: "20%",
-        backgroundColor: "#5B7E7EB3"
-    },
+
     signin_alt: {
         paddingVertical: 36,
         alignItems: "center"
     },
+    error: {
+        color: "red",
+        paddingHorizontal: 16,
+    }
 })
 export default SignUp;
