@@ -3,7 +3,7 @@ import Button from './Partials/Button';
 const Facebook = require("../assets/images/icons/facebook.png")
 const Google = require("../assets/images/icons/google.png")
 import { useState } from 'react';
-const SignUp = () => {
+const SignUp = ({navigation}) => {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -42,23 +42,12 @@ const SignUp = () => {
                     errors.password ? <Text>{errors.passowrd}</Text> : null
                 }
                 <View style={styles.btn_container}>
-                    <Button title="Sign up" color="white" background="#008080" font_size={20} />
+                    <Button title="Sign up" color="white" background="#008080" font_size={20} onPress={()=>navigation.navigate("Home")}/>
                 </View>
             </KeyboardAvoidingView>
-            <View style={styles.login_methods}>
-                <View style={styles.legend}>
-                    <View style={styles.line}></View>
-                    <Text style={{ color: "#5B7E7E", fontSize: 14 }}> Or continue with</Text>
-                    <View style={styles.line}></View>
-                </View>
-                <View style={styles.alt_btns}>
-                    <Button title="continue with Facebook" color="white" background="#0072BB" icon={Facebook} height={24} width={16} icon_dir="left" />
-                    <Button title="continue with Google" color="#233131" background="transparent" icon={Google} height={24} width={24} icon_dir="left" border="#233131" />
-                </View>
-            </View>
             <View style={styles.signin_alt}>
                 <Text style={{ color: "#5B7E7E", fontSize: 14 }}>
-                    already have an account ? <Pressable style={{ color: "#D2ACA0" }}><Text>sign in</Text></Pressable>
+                    already have an account ? <Pressable style={{ color: "#D2ACA0" }} onPress={()=>navigation.navigate("Login")}><Text>sign in</Text></Pressable>
                 </Text>
             </View>
 

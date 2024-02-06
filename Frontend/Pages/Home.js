@@ -6,7 +6,7 @@ const Home = () => {
             <Image source={ChatbotImg} style={styles.bot_img} resizeMode="contain" />
 
 
-            <Pressable style={styles.button} onPress={() => console.log("hello")}>
+            <Pressable style={styles.button}>
 
                 <Text style={[styles.btn_txt]}>How can I help you?</Text>
 

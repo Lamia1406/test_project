@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import Button from './Partials/Button';
 const disussionImg = require("../assets/images/discussion_img.png")
 const swipeRight = require("../assets/images/icons/swipe_right.png")
-const LandingPage2 = () => {
+const LandingPage2 = ({navigation}) => {
     return (
         <View style={[styles.main]}>
             <View style={styles.hero_img}>
@@ -13,8 +13,8 @@ const LandingPage2 = () => {
                 <Text style={[styles.hero_heading]}>Let's start !</Text>
             </View>
             <View style={styles.btn_container}>
-                <Button title="I'm new here" color="#0ABAB5" background="white" font_size={20} />
-                <Button title="Sign In" color="#008080" background="transparent" font_size={20} />
+                <Button title="I'm new here" color="#0ABAB5" background="white" font_size={20} onPress={()=>navigation.navigate("Signup")}/>
+                <Button title="Sign In" color="#008080" background="transparent" font_size={20} onPress={()=>navigation.navigate("Login")}/>
             </View>
 
         </View>

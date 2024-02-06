@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable } from 'react-native';
 import Button from './Partials/Button';
 import { useState } from 'react';
-const Login = () => {
+const Login = ({navigation}) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState({})
@@ -35,12 +35,12 @@ const Login = () => {
                     errors.password ? <Text>{errors.passowrd}</Text> : null
                 }
                 <View style={styles.btn_container}>
-                    <Button title="Sign in" color="white" background="#008080" font_size={20} />
+                    <Button title="Sign in" color="white" background="#008080" font_size={20} onPress={()=> navigation.navigate("Home")}/>
                 </View>
             </KeyboardAvoidingView>
             <View style={styles.signup_alt}>
                 <Text style={{ color: "#5B7E7E", fontSize: 14 }}>
-                    don't have an account ? <Pressable style={{ color: "#D2ACA0" }}><Text>sign up</Text></Pressable>
+                    don't have an account ? <Pressable style={{ color: "#D2ACA0" }} onPress={()=> navigation.navigate("Signup")}><Text>sign up</Text></Pressable>
                 </Text>
             </View>
 

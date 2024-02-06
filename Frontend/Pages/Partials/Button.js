@@ -1,5 +1,5 @@
 import { Pressable, Text, StyleSheet, Image } from "react-native"
-const Button = ({ title, color, background, font_size, icon, height, width, icon_dir, border }) => {
+const Button = ({ title, color, background, font_size, icon, height, width, icon_dir, border, onPress }) => {
     const styles = StyleSheet.create({
         button: {
             backgroundColor: background,
@@ -26,7 +26,7 @@ const Button = ({ title, color, background, font_size, icon, height, width, icon
 
     })
     return (
-        <Pressable style={styles.button} onPress={() => console.log("hello")}>
+        <Pressable style={styles.button} onPress={onPress}>
             {
                 icon_dir == "left" && icon &&
                 <Image source={icon} style={styles.img} resizeMode="contain" />

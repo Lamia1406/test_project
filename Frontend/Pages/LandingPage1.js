@@ -3,7 +3,7 @@ import Button from './Partials/Button';
 const arrowRight = require("../assets/images/icons/arrow_right.png")
 const robotImg = require("../assets/images/robot_img.png")
 const swipeLeft = require("../assets/images/icons/swipe.png")
-const LandingPage1 = () => {
+const LandingPage1 = ({navigation}) => {
     return (
         <View style={[styles.main]}>
             <View style={styles.hero_img}>
@@ -16,7 +16,7 @@ const LandingPage1 = () => {
                     i am here to make your day brighter and your tasks a little bit easier !</Text>
             </View>
             <View style={styles.btn_container}>
-                <Button title="Next" color="#0ABAB5" background="white" font_size={16} icon={arrowRight} height={24} width={24} icon_dir="right" />
+                <Button title="Next" color="#0ABAB5" background="white" font_size={16} icon={arrowRight} height={24} width={24} icon_dir="right" onPress={()=>navigation.navigate("LandingPage2")}/>
             </View>
 
         </View>
