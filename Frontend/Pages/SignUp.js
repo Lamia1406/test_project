@@ -14,8 +14,9 @@ const SignUp = ({ navigation }) => {
         const response = await axios.post(
             'http://127.0.0.1:8000/api/register/',
             {
-                username: 'your_username',
-                password: 'your_password',
+                username: username,
+                email:email,
+                password: password,
             }
         );
         console.log(response.data.message);
@@ -29,18 +30,18 @@ const SignUp = ({ navigation }) => {
         else if (user.length != 0) errors.username = "Username already exists"
         else if (username.length < 3 || username.length > 20) errors.username = "Username must be between 3 and 20 characters"
         else if (!/^[a-zA-Z0-9]+$/.test(username)) errors.username = "Username can only contain letters and numbers"
-        else if (!/^[a-zA-Z]*$/.test(username)) errors.username = "Username should start with a letter"
+        else if (!/^[a-zA-Z]/.test(username)) errors.username = "Username should start with a letter"
         if (!email) errors.email = "Email is required"
         else if (!/^[^\s@]+@univ-constantine2\.dz$/.test(email)) errors.email = "Only university emails are allowed"
         if (!password) errors.password = "Password is required"
         else if (password.length < 8) errors.password = "Password must be at least 8 characters"
         else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/.test(password)) errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
         setErrors(errors)
-        register()
         return Object.keys(errors).length === 0
     }
     const handleSubmit = () => {
         if (validateForm()) {
+            register()
             setUsername("")
             setEmail("")
             setPassword("")
