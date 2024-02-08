@@ -1,35 +1,42 @@
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Button from './Partials/Button';
 import { useState } from 'react';
+import axios from "axios"
 const SignUp = ({ navigation }) => {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState({})
     const [user, setUser] = useState([])
-    const fetchData = async () => {
-        // use JSON Placeholder for testing purposes
-        const response = await fetch(
-            `http://jsonplaceholder.typicode.com/users?username=${username}`
-        )
-        const data = await response.json()
-        setUser(data)
+
+    const register = async () => {
+    try {
+        const response = await axios.post(
+            'http://127.0.0.1:8000/api/register/',
+            {
+                username: 'your_username',
+                password: 'your_password',
+            }
+        );
+        console.log(response.data.message);
+    } catch (error) {
+        console.error('Registration failed', error);
     }
+};
     const validateForm = () => {
         let errors = {}
-        fetchData()
         if (!username) errors.username = "Username is required"
         else if (user.length != 0) errors.username = "Username already exists"
         else if (username.length < 3 || username.length > 20) errors.username = "Username must be between 3 and 20 characters"
         else if (!/^[a-zA-Z0-9]+$/.test(username)) errors.username = "Username can only contain letters and numbers"
         else if (!/^[a-zA-Z]*$/.test(username)) errors.username = "Username should start with a letter"
-
         if (!email) errors.email = "Email is required"
         else if (!/^[^\s@]+@univ-constantine2\.dz$/.test(email)) errors.email = "Only university emails are allowed"
         if (!password) errors.password = "Password is required"
         else if (password.length < 8) errors.password = "Password must be at least 8 characters"
         else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/.test(password)) errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
         setErrors(errors)
+        register()
         return Object.keys(errors).length === 0
     }
     const handleSubmit = () => {
