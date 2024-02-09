@@ -1,36 +1,43 @@
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Button from './Partials/Button';
 import { useState } from 'react';
+import axios from 'axios';
 const Login = ({ navigation }) => {
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [user, setUser] = useState([])
     const [errors, setErrors] = useState({})
 
-    // use JSON Placeholder for testing purposes
-    const fetchData = async () => {
-        const response = await fetch(
-            `http://jsonplaceholder.typicode.com/users?username=${username}`
-        )
-        const data = await response.json()
-        setUser(data)
-    }
+    const handleLogin = async () => {
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/api/login/', {
+            email: email,
+            password: password,
+          })
+          navigation.navigate("Home");
+        } catch (error) {
+          if (error.response) {
+            console.error('Error response:', error.response.data);
+          } else if (error.request) {
+            console.error('No response received:', error.request);
+          } else {
+            console.error('Error during request setup:', error.message);
+          }
+        }
+      };
     const validateForm = () => {
         let errors = {}
-        fetchData()
-        if (!username) errors.username = "Username is required"
-        else if (user.length == 0) errors.username = "User doesn't exist"
+        if (!email) errors.email = "Email is required"
         if (!password) errors.password = "Password is required"
-        else if (user.password != password) errors.password = "Incorrect Password"
         setErrors(errors)
         return Object.keys(errors).length === 0
     }
     const handleSubmit = () => {
         if (validateForm()) {
-            setUsername("")
+            handleLogin()
+            setEmail("")
             setPassword("")
             setErrors("")
-            navigation.navigate("Home")
         }
     }
     return (
@@ -44,9 +51,9 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
                 <KeyboardAvoidingView behavior='padding' style={styles.signin_form}>
-                    <TextInput placeholder='Username' style={styles.input_field} value={username} onChangeText={(text) => setUsername(text)} />
+                    <TextInput placeholder='Email' style={styles.input_field} value={email} onChangeText={(text) => setEmail(text)} />
                     {
-                        errors.username ? <Text style={styles.error}>{errors.username}</Text> : null
+                        errors.email ? <Text style={styles.error}>{errors.email}</Text> : null
                     }
                     <TextInput placeholder='Password' secureTextEntry style={styles.input_field} value={password} onChangeText={(text) => setPassword(text)} />
                     {
