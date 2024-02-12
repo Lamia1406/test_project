@@ -1,13 +1,16 @@
 # views.py
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib.auth.hashers import make_password
 import json
 import re
+from voice_assistant import speak_girly_voice, recognize_speech, model, palm
 from django.contrib.auth import authenticate, login
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from .users import Users
+
 @csrf_exempt
 def register_user(request):
     if request.method == 'POST':
@@ -49,3 +52,20 @@ def login_user(request):
                 return JsonResponse({'message': 'Invalid email or password'}, status=401)
     except Users.DoesNotExist:
         return JsonResponse({"message": "User not found"})
+
+
+@csrf_exempt
+@require_POST
+def process_speech(request):
+    user_input = recognize_speech()
+    print("User's question:", user_input)
+    completion = palm.generate_text(
+        model=model,
+        prompt=user_input,  
+        temperature=0.3,
+        max_output_tokens=800,
+    )
+    speak_girly_voice(completion.result, "output.mp3")
+    response_data = {'response': 'Success'}
+    return JsonResponse(response_data)
+   
