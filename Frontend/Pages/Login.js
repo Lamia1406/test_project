@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable, SafeAreaView } from 'react-native';
 import Button from './Partials/Button';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -16,13 +17,12 @@ const Login = ({ navigation }) => {
           })
           navigation.navigate("Home");
         } catch (error) {
-          if (error.response) {
+            let err = {}
+            err.invalid = error.response.data.message
+            toast.error(error.response.data.message || 'An error occurred');
             console.error('Error response:', error.response.data);
-          } else if (error.request) {
-            console.error('No response received:', error.request);
-          } else {
-            console.error('Error during request setup:', error.message);
-          }
+          setErrors(err)
+          throw error; 
         }
       };
     const validateForm = () => {
@@ -32,13 +32,22 @@ const Login = ({ navigation }) => {
         setErrors(errors)
         return Object.keys(errors).length === 0
     }
-    const handleSubmit = () => {
-        if (validateForm()) {
-            handleLogin()
+    const handleSubmit = async () => {
+        try {
+            if (validateForm()) {
+            await handleLogin();
             setEmail("")
             setPassword("")
-            setErrors("")
+            setErrors({})
         }
+    }
+    catch (error) {
+        console.error(error.response.data.message);
+        let err = {}
+        err.invalid= error.response.data.message
+        setErrors(err)
+        toast.error(error.response.data.message || 'An error occurred');
+    }
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -51,6 +60,9 @@ const Login = ({ navigation }) => {
                     </View>
                 </View>
                 <KeyboardAvoidingView behavior='padding' style={styles.signin_form}>
+                    {
+                        errors.invalid ? <Text style={styles.error}>{errors.invalid}</Text> : null
+                    }
                     <TextInput placeholder='Email' style={styles.input_field} value={email} onChangeText={(text) => setEmail(text)} />
                     {
                         errors.email ? <Text style={styles.error}>{errors.email}</Text> : null

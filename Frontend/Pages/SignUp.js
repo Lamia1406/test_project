@@ -2,53 +2,69 @@ import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Pressable, Saf
 import Button from './Partials/Button';
 import { useState } from 'react';
 import axios from "axios"
+import { toast } from 'react-toastify';
+
 const SignUp = ({ navigation }) => {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [errors, setErrors] = useState({})
     const [user, setUser] = useState([])
+    const handleSubmit = async () => {
+        if (validateForm()) {
+            try {
+                await register();
+                setUsername("");
+                setEmail("");
+                setPassword("");
+                setErrors({});
+               
+            } catch (error) {
+                console.error(error.response.data.message);
+                let err = {}
+                err.account_exist = error.response.data.message
+                setErrors(err)
+                toast.error(error.response.data.message || 'An error occurred');
+            }
+        }
+    };
 
     const register = async () => {
-    try {
-        const response = await axios.post(
-            'http://127.0.0.1:8000/api/register/',
-            {
-                username: username,
-                email:email,
-                password: password,
-            }
-        );
-        console.log(response.data.message);
-    } catch (error) {
-        console.error('Registration failed', error);
-    }
-};
+        try {
+            const response = await axios.post(
+                'http://127.0.0.1:8000/api/register/',
+                {
+                    username: username,
+                    email: email,
+                    password: password,
+                }
+            );
+            navigation.navigate("Home");
+        } catch (error) {
+            let err = {}
+                err.account_exist = error.response.data.message
+                setErrors(err)
+                toast.error(error.response.data.message || 'An error occurred');
+            throw error; 
+        }
+    };
+
     const validateForm = () => {
         let errors = {}
-        if (!username) errors.username = "Username is required"
-        else if (user.length != 0) errors.username = "Username already exists"
-        else if (username.length < 3 || username.length > 20) errors.username = "Username must be between 3 and 20 characters"
-        else if (!/^[a-zA-Z0-9]+$/.test(username)) errors.username = "Username can only contain letters and numbers"
-        else if (!/^[a-zA-Z]/.test(username)) errors.username = "Username should start with a letter"
-        if (!email) errors.email = "Email is required"
-        else if (!/^[^\s@]+@univ-constantine2\.dz$/.test(email)) errors.email = "Only university emails are allowed"
-        if (!password) errors.password = "Password is required"
-        else if (password.length < 8) errors.password = "Password must be at least 8 characters"
-        else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/.test(password)) errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
-        setErrors(errors)
-        return Object.keys(errors).length === 0
-    }
-    const handleSubmit = () => {
-        if (validateForm()) {
-            register()
-            setUsername("")
-            setEmail("")
-            setPassword("")
-            setErrors("")
-            navigation.navigate("Home")
-        }
-    }
+            if (!username) errors.username = "Username is required"
+            else if (user.length != 0) errors.username = "Username already exists"
+            else if (username.length < 3 || username.length > 20) errors.username = "Username must be between 3 and 20 characters"
+            else if (!/^[a-zA-Z0-9]+$/.test(username)) errors.username = "Username can only contain letters and numbers"
+            else if (!/^[a-zA-Z]/.test(username)) errors.username = "Username should start with a letter"
+            if (!email) errors.email = "Email is required"
+            else if (!/^[^\s@]+@univ-constantine2\.dz$/.test(email)) errors.email = "Only university emails are allowed"
+            if (!password) errors.password = "Password is required"
+            else if (password.length < 8) errors.password = "Password must be at least 8 characters"
+            else if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/.test(password)) errors.password = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+            setErrors(errors)
+        return Object.keys(errors).length === 0;
+    };
+        
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.main}>
@@ -60,6 +76,9 @@ const SignUp = ({ navigation }) => {
                     </View>
                 </View>
                 <KeyboardAvoidingView behavior='padding' style={styles.signin_form}>
+                {
+                        errors.account_exist ? <Text style={styles.error}>{errors.account_exist}</Text> : null
+                    }
                     <TextInput placeholder='Username' style={styles.input_field} value={username} onChangeText={(text) => setUsername(text)} />
                     {
                         errors.username ? <Text style={styles.error}>{errors.username}</Text> : null
