@@ -1,0 +1,7 @@
+gtts
+SpeechRecognition
+playsound
+google-generativeai
+django
+django-cors-headers
+pyaudio

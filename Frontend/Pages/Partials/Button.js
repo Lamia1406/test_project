@@ -11,8 +11,7 @@ const Button = ({ title, color, background, font_size, icon, height, width, icon
             flexDirection: icon ? "row" : "column",
             alignItems: "center",
             justifyContent: "center",
-            flex: 1,
-            gap: 20
+            gap: 20,
         },
         btn_txt: {
             color: color,
