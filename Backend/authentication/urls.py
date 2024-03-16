@@ -1,3 +1,6 @@
+"""
+Defines URL patterns for routing requests to corresponding view functions.
+"""
 from django.urls import path
 from .views import register_user, login_user, process_speech, logout_user
 urlpatterns = [
